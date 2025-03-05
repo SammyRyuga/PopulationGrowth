@@ -1,0 +1,92 @@
+#include <stdio.h>
+
+void simulate_population(double P0, double k, double K, double dt, int days, int event_day)
+{
+    double P = P0;
+
+    printf("\n============================================\n");
+    printf("  Population Growth Simulation\n");
+    printf("============================================\n\n");
+    printf(" Day | Population\n");
+    printf("----------------------\n");
+    printf("  0  | %.2f\n", P);
+
+    for (int t = 1; t <= days; t++) {
+        P = P + dt * k * P * (1 - P / K);
+
+        if (t == event_day) {
+            P /= 2;
+            printf("----------------------\n");
+            printf(" ** Event on Day %d: Population halved! **\n", t);
+            printf("----------------------\n");
+        }
+
+        if (P < 0) P = 0;
+        printf(" %3d | %.2f\n", t, P);
+    }
+
+    printf("\n============================================\n");
+    printf("  Simulation Complete!\n");
+    printf("============================================\n");
+}
+
+int main()
+{
+    double P0, k, K, dt;
+    int days, event_day;
+
+    printf("\n============================================\n");
+    printf("  Population Growth Simulation Setup\n");
+    printf("============================================\n");
+
+    while (1) {
+        printf("Enter initial population (positive): ");
+        scanf("%lf", &P0);
+        if (P0 > 0)
+                break;
+        printf("Invalid input. Please enter a positive value.\n");
+    }
+
+    while (1) {
+        printf("Enter growth rate (positive): ");
+        scanf("%lf", &k);
+        if (k > 0)
+                break;
+        printf("Invalid input. Please enter a positive value.\n");
+    }
+
+    while (1) {
+        printf("Enter carrying capacity (must be > initial population): ");
+        scanf("%lf", &K);
+        if (K > P0)
+                break;
+        printf("Invalid input. Carrying capacity must be greater than initial population.\n");
+    }
+    while (1) {
+        printf("Enter time step (dt, positive): ");
+        scanf("%lf", &dt);
+        if (dt > 0)
+                break;
+        printf("Invalid input. Please enter a positive value.\n");
+    }
+
+    while (1) {
+        printf("Enter duration (days, positive): ");
+        scanf("%d", &days);
+        if (days > 0)
+                break;
+        printf("Invalid input. Please enter a positive number of days.\n");
+    }
+
+    while (1) {
+        printf("Enter when population halves (between 1 and %d): ", days);
+        scanf("%d", &event_day);
+        if (event_day >= 1 && event_day <= days)
+                break;
+        printf("Invalid input. Event day must be within the duration range.\n");
+    }
+
+    simulate_population(P0, k, K, dt, days, event_day);
+
+    return 0;
+}
